@@ -45,9 +45,11 @@
             </ul>
         </div>
         <div class="input-group ">
-            <input v-model="input_text" class="form-control" type="text">
+            <input v-model="input_text" class="form-control" type="search">
             <span class="input-group-btn">
+
                 <input class="btn btn-default" value="Search" type="button" onclick="search()">
+
             </span>
         </div>
 
@@ -69,7 +71,7 @@
     if(!localStorage.config){
 
         localStorage.config=JSON.stringify({
-            "default_search_engine":"Baidu",
+            "default_search_engine":"Baidu"
         })
     }
     var engine_list={
@@ -78,7 +80,7 @@
         "Sougo":"https://m.sogou.com/web/searchList.jsp?keyword=",
         "Bing":"https://www.bing.com/search?q=",
         "360":"https://m.so.com/s?q="
-    }
+    };
     var config=JSON.parse(localStorage.config);
     var vm = new Vue({
         el: '#app',
@@ -112,6 +114,11 @@
         $('.logo').find('span').click(function () {
             $('#group').slideToggle();
         });
+        $(document).keypress(function (e) {
+            if(e.keyCode ==13){
+                search();
+            }
+        })
     })
 
 </script>
