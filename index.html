@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <link rel="stylesheet" href="css/bootstrap.min.css">
+    <style>
+        .logo {
+            font-size: 2em;
+            text-align: center;
+        }
+        .logo>ul{
+            padding: 0;
+            margin: 0;
+         }
+        .logo>ul>li{
+            list-style-type: none;
+        }
+        .footer{
+
+            width: 100%;
+            bottom: 3em;
+            position: fixed;
+            text-align: center;
+            color: #0000004d;
+        }
+
+        #group{
+            display: none;
+        }
+        #group li{
+            margin-top:1em;
+        }
+    </style>
+</head>
+<body>
+<div class="container">
+<div id="app" class="row">
+    <div class="col-xs-12">
+        <div class="logo" >
+            <span>{{logo}}</span>
+            <ul id="group" v-html="group">
+
+            </ul>
+        </div>
+        <div class="input-group ">
+            <input v-model="input_text" class="form-control" type="text">
+            <span class="input-group-btn">
+                <input class="btn btn-default" value="Search" type="button" onclick="search()">
+            </span>
+        </div>
+
+
+
+    </div>
+    <div class="footer col-xs-12">
+    <footer>
+        <a>Github</a>
+    </footer>
+</div>
+</div>
+</div>
+<script src="js/jquery-3.2.1.min.js"></script>
+<script src="js/bootstrap.min.js"></script>
+<script src="js/vue.js"></script>
+
+<script>
+    if(!localStorage.config){
+
+        localStorage.config=JSON.stringify({
+            "default_search_engine":"Baidu",
+        })
+    }
+    var engine_list={
+        "Google":"https://www.google.com/search?q=",
+        "Baidu":"https://m.baidu.com/s?word=",
+        "Sougo":"https://m.sogou.com/web/searchList.jsp?keyword=",
+        "Bing":"https://www.bing.com/search?q=",
+        "360":"https://m.so.com/s?q="
+    }
+    var config=JSON.parse(localStorage.config);
+    var vm = new Vue({
+        el: '#app',
+        data: {
+            input_text:"",
+            logo: config.default_search_engine,
+            group:""
+        }
+    });
+    function set_default_engine(str) {
+        config.default_search_engine=str;
+        localStorage.config=JSON.stringify(config);
+        update_group(str);
+        vm.$data.logo=str;
+        $('#group').slideToggle();
+    }
+    function update_group(default_engine) {
+        var item='';
+        for(i in engine_list){
+            if(i !== default_engine){
+                item+='<li onclick="set_default_engine(\''+i+'\')">'+i+'</li>'
+            }
+        }
+        vm.$data.group=item;
+    }
+    function search() {
+        window.location.href=engine_list[config.default_search_engine]+vm.$data.input_text;
+    }
+    $(document).ready(function () {
+        update_group('Baidu');
+        $('.logo').find('span').click(function () {
+            $('#group').slideToggle();
+        });
+    })
+
+</script>
+</body>
+</html>
