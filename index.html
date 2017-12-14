@@ -110,7 +110,7 @@
         window.location.href=engine_list[config.default_search_engine]+vm.$data.input_text;
     }
     $(document).ready(function () {
-        update_group('Baidu');
+        update_group(config.default_search_engine);
         $('.logo').find('span').click(function () {
             $('#group').slideToggle();
         });
