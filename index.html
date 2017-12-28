@@ -39,7 +39,7 @@
 <div id="app" class="row">
     <div class="col-xs-12">
         <div class="logo" >
-            <span>{{logo}}</span>
+            <span v-html="logo"></span>
             <ul id="group" v-html="group">
 
             </ul>
@@ -52,9 +52,6 @@
 
             </span>
         </div>
-
-
-
     </div>
     <div class="footer col-xs-12">
     <footer>
@@ -74,15 +71,15 @@
             "default_search_engine":"Baidu"
         })
     }
-    var engine_list={
+    let engine_list={
         "Google":"https://www.google.com/search?q=",
         "Baidu":"https://m.baidu.com/s?word=",
         "Sougo":"https://m.sogou.com/web/searchList.jsp?keyword=",
         "Bing":"https://www.bing.com/search?q=",
         "360":"https://m.so.com/s?q="
     };
-    var config=JSON.parse(localStorage.config);
-    var vm = new Vue({
+    let config=JSON.parse(localStorage.config);
+    let vm = new Vue({
         el: '#app',
         data: {
             input_text:"",
@@ -90,32 +87,32 @@
             group:""
         }
     });
-    function set_default_engine(str) {
+    const set_default_engine=(str) =>{
         config.default_search_engine=str;
         localStorage.config=JSON.stringify(config);
         update_group(str);
         vm.$data.logo=str;
         $('#group').slideToggle();
-    }
-    function update_group(default_engine) {
-        var item='';
-        for(i in engine_list){
+    };
+    const update_group=(default_engine)=> {
+        let item='';
+        for(let i in engine_list){
             if(i !== default_engine){
-                item+='<li onclick="set_default_engine(\''+i+'\')">'+i+'</li>'
+                item+=`<li onclick="set_default_engine('${i}')">${i}</li>`
             }
         }
         vm.$data.group=item;
-    }
-    function search() {
+    };
+    const search=()=> {
         window.location.href=engine_list[config.default_search_engine]+vm.$data.input_text;
-    }
+    };
     $(document).ready(function () {
         update_group(config.default_search_engine);
         $('.logo').find('span').click(function () {
             $('#group').slideToggle();
         });
         $(document).keypress(function (e) {
-            if(e.keyCode ==13){
+            if(e.keyCode ===13){
                 search();
             }
         })
