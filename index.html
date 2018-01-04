@@ -2,22 +2,24 @@
 <html manifest="main.appcache" lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">  
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Title</title>
-    <link rel="stylesheet" href="css/bootstrap.min.css">
     <style>
         .logo {
             font-size: 2em;
-            text-align: center;
+            /*text-align: center;*/
         }
-        .logo>ul{
+
+        .logo > ul {
             padding: 0;
             margin: 0;
-         }
-        .logo>ul>li{
+        }
+
+        .logo > ul > li {
             list-style-type: none;
         }
-        footer{
+
+        footer {
 
             width: 100%;
             bottom: 3em;
@@ -25,93 +27,111 @@
             text-align: center;
             color: #0000004d;
         }
+        .input-group{
+            display: inline-block;
+        }
+        .input-group>div {
+            float: left;
+            font-size: 0;
+            box-shadow:0 1px 4px 0 rgba(133,133,133,.50);
+        }
 
-        #group{
+        .input-group>div>input {
+            border:0;
+            height: 3em;
+        }
+        .input-group>div>input[type="button"]{
+            color: #ffffff;
+            background: cadetblue;
+        }
+
+        #group {
             display: none;
         }
-        #group li{
-            margin-top:1em;
+
+        #group li {
+            margin-top: 1em;
+        }
+        .content{
+            text-align: center;
         }
     </style>
 </head>
 <body>
-<div class="container">
-<div id="app" class="row">
-    <div class="col-xs-12">
-        <div class="logo" >
-            <span v-html="logo"></span>
-            <ul id="group" v-html="group">
-
-            </ul>
-        </div>
-        <div class="input-group ">
-            <input v-model="input_text" class="form-control" type="search">
-            <span class="input-group-btn">
-
-                <input class="btn btn-default" value="Search" type="button" onclick="search()">
-
-            </span>
+<div>
+    <div id="app" class="row">
+        <div class="content">
+            <div class="logo">
+                <span v-html="logo"></span>
+                <ul id="group" v-html="group">
+                </ul>
+            </div>
+            <div class="input-group">
+                <div>
+                    <input v-model="input_text" type="search">
+                    <input value="Search" type="button" onclick="search()">
+                </div>
+            </div>
         </div>
     </div>
-
-</div>
 </div>
 <footer>
     <a href="https://github.com/hezhuowei/something-in-one">Github</a>
 </footer>
 <script src="js/jquery-3.2.1.min.js"></script>
-<script src="js/bootstrap.min.js"></script>
 <script src="js/vue.js"></script>
 
 <script>
-    if(!localStorage.config){
+    if (!localStorage.config) {
 
-        localStorage.config=JSON.stringify({
-            "default_search_engine":"Baidu"
+        localStorage.config = JSON.stringify({
+            "default_search_engine": "Baidu"
         })
     }
-    let engine_list={
-        "Google":"https://www.google.com/search?q=",
-        "Baidu":"https://m.baidu.com/s?word=",
-        "Sougo":"https://m.sogou.com/web/searchList.jsp?keyword=",
-        "Bing":"https://www.bing.com/search?q=",
-        "360":"https://m.so.com/s?q="
+    let engine_list = {
+        "Google": "https://www.google.com/search?q=",
+        "Baidu": "https://m.baidu.com/s?word=",
+        "Sougo": "https://m.sogou.com/web/searchList.jsp?keyword=",
+        "Bing": "https://www.bing.com/search?q=",
+        "360": "https://m.so.com/s?q="
     };
-    let config=JSON.parse(localStorage.config);
+    let config = JSON.parse(localStorage.config);
     let vm = new Vue({
         el: '#app',
         data: {
-            input_text:"",
+            input_text: "",
             logo: config.default_search_engine,
-            group:""
+            group: ""
         }
     });
-    const set_default_engine=(str) =>{
-        config.default_search_engine=str;
-        localStorage.config=JSON.stringify(config);
+    const set_default_engine = (str) => {
+        config.default_search_engine = str;
+        localStorage.config = JSON.stringify(config);
         update_group(str);
-        vm.$data.logo=str;
+        vm.$data.logo = str;
+        $('#group').stop();
         $('#group').slideToggle();
     };
-    const update_group=(default_engine)=> {
-        let item='';
-        for(let i in engine_list){
-            if(i !== default_engine){
-                item+=`<li onclick="set_default_engine('${i}')">${i}</li>`
+    const update_group = (default_engine) => {
+        let item = '';
+        for (let i in engine_list) {
+            if (i !== default_engine) {
+                item += `<li onclick="set_default_engine('${i}')">${i}</li>`
             }
         }
-        vm.$data.group=item;
+        vm.$data.group = item;
     };
-    const search=()=> {
-        window.location.href=engine_list[config.default_search_engine]+vm.$data.input_text;
+    const search = () => {
+        window.location.href = engine_list[config.default_search_engine] + vm.$data.input_text;
     };
     $(document).ready(function () {
         update_group(config.default_search_engine);
         $('.logo').find('span').click(function () {
+            $('#group').stop();
             $('#group').slideToggle();
         });
         $(document).keypress(function (e) {
-            if(e.keyCode ===13){
+            if (e.keyCode === 13) {
                 search();
             }
         })
