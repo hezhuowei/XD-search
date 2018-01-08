@@ -1,13 +1,12 @@
 <!DOCTYPE html>
-<html manifest="main.appcache" lang="en">
+<html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Title</title>
+    <title>WhoCares</title>
     <style>
         .logo {
             font-size: 2em;
-            /*text-align: center;*/
         }
 
         .logo > ul {
@@ -20,27 +19,29 @@
         }
 
         footer {
-
             width: 100%;
             bottom: 3em;
             position: fixed;
             text-align: center;
             color: #0000004d;
         }
-        .input-group{
+
+        .input-group {
             display: inline-block;
         }
-        .input-group>div {
+
+        .input-group > div {
             float: left;
             font-size: 0;
-            box-shadow:0 1px 4px 0 rgba(133,133,133,.50);
+            box-shadow: 0 1px 4px 0 rgba(133, 133, 133, .50);
         }
 
-        .input-group>div>input {
-            border:0;
+        .input-group > div > input {
+            border: 0;
             height: 3em;
         }
-        .input-group>div>input[type="button"]{
+
+        .input-group > div > input[type="button"] {
             color: #ffffff;
             background: cadetblue;
         }
@@ -52,7 +53,8 @@
         #group li {
             margin-top: 1em;
         }
-        .content{
+
+        .content {
             text-align: center;
         }
     </style>
@@ -68,7 +70,7 @@
             </div>
             <div class="input-group">
                 <div>
-                    <input v-model="input_text" type="search">
+                    <input v-model="input_text" type="search" onsearch="search()">
                     <input value="Search" type="button" onclick="search()">
                 </div>
             </div>
@@ -79,21 +81,20 @@
     <a href="https://github.com/hezhuowei/something-in-one">Github</a>
 </footer>
 <script src="js/jquery-3.2.1.min.js"></script>
-<script src="js/vue.js"></script>
-
+<script src="js/vue.min.js"></script>
 <script>
     if (!localStorage.config) {
-
         localStorage.config = JSON.stringify({
             "default_search_engine": "Baidu"
         })
     }
-    let engine_list = {
+    const engine_list = {
         "Google": "https://www.google.com/search?q=",
         "Baidu": "https://m.baidu.com/s?word=",
         "Sougo": "https://m.sogou.com/web/searchList.jsp?keyword=",
         "Bing": "https://www.bing.com/search?q=",
-        "360": "https://m.so.com/s?q="
+        "360": "https://m.so.com/s?q=",
+        "Zhihu": "https://zhihu.sogou.com/zhihuwap?query="
     };
     let config = JSON.parse(localStorage.config);
     let vm = new Vue({
@@ -111,6 +112,7 @@
         vm.$data.logo = str;
         $('#group').stop();
         $('#group').slideToggle();
+
     };
     const update_group = (default_engine) => {
         let item = '';
@@ -129,14 +131,21 @@
         $('.logo').find('span').click(function () {
             $('#group').stop();
             $('#group').slideToggle();
+            $('footer').slideToggle();
         });
-        $(document).keypress(function (e) {
-            if (e.keyCode === 13) {
-                search();
-            }
-        })
-    })
+    });
 
+    /*service worker*/
+    if ('serviceWorker' in navigator) {
+        navigator.serviceWorker.register('/sw.js', {scope: '/'}
+        ).then(
+            (reg) => {
+                console.log(`service worker registration succeeded.Scope is ${reg.scope}`);
+            }
+        ).catch((err) => {
+            console.log(`service worker registration failed with${err}`)
+        });
+    }
 </script>
 </body>
 </html>
