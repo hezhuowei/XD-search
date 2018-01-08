@@ -12,6 +12,7 @@ http://www.binaryio.top
 ------
 ~~Bootstrap~~ +vue.js+Jquery
 
-##Note
+##Note 
+
 *出于安全考量，Service workers只能由HTTPS承载，毕竟修改网络请求的能力暴露给中间人攻击会非常危险。*
 serviceWorker需要https才能成功注册,所以启用缓存需要部署https。
