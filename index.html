@@ -158,6 +158,11 @@
             $('#group').slideToggle();
             $('footer').fadeToggle(200);
         });
+        $('input').keyup((e)=>{
+            if(e.keyCode == 13){
+                search();
+            }
+        })
     });
 </script>
 </body>
