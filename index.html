@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>WhoCares</title>
+    <title>Search</title>
     <style>
         .logo {
             font-size: 2em;
@@ -126,16 +126,7 @@
     const search = () => {
         window.location.href = engine_list[config.default_search_engine] + vm.$data.input_text;
     };
-    $(document).ready(function () {
-        update_group(config.default_search_engine);
-        $('input').focus(()=>{$('footer').hide();});
-        $('input').blur(()=>{$('footer').show();});
-        $('.logo').find('span').click( ()=> {
-            $('#group').stop();
-            $('#group').slideToggle();
-            $('footer').fadeToggle(200);
-        });
-    });
+
 
     /*service worker*/
     if ('serviceWorker' in navigator) {
@@ -148,6 +139,26 @@
             console.log(`service worker registration failed with${err}`)
         });
     }
+
+
+    $(document).ready(function () {
+        update_group(config.default_search_engine);
+        $('input').focus(
+            () => {
+                $('footer').hide();
+            }
+        );
+        $('input').blur(
+            () => {
+                $('footer').show();
+            }
+        );
+        $('.logo').find('span').click(() => {
+            $('#group').stop();
+            $('#group').slideToggle();
+            $('footer').fadeToggle(200);
+        });
+    });
 </script>
 </body>
 </html>
