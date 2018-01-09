@@ -128,7 +128,9 @@
     };
     $(document).ready(function () {
         update_group(config.default_search_engine);
-        $('.logo').find('span').click(function () {
+        $('input').focus(()=>{$('footer').hide();});
+        $('input').blur(()=>{$('footer').show();});
+        $('.logo').find('span').click( ()=> {
             $('#group').stop();
             $('#group').slideToggle();
             $('footer').fadeToggle(200);
@@ -140,7 +142,7 @@
         navigator.serviceWorker.register('/sw.js', {scope: '/'}
         ).then(
             (reg) => {
-                console.log(`service worker registration succeeded.Scope is ${reg.scope}`);
+                console.log(`service worker scope is ${reg.scope}`);
             }
         ).catch((err) => {
             console.log(`service worker registration failed with${err}`)

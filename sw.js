@@ -12,19 +12,35 @@ this.addEventListener('install', (event) => {
     )
 });
 this.addEventListener('fetch', (event) => {
+    if (event.request.url===self.location.origin+'/update.html')
+    {
+        console.log("update cache");
+        caches.open('v1').then((cache) => {
+            console.log("updated")
+            return cache.addAll([
+                    '/',
+                    '/index.html',
+                    '/js/jquery-3.2.1.min.js',
+                    '/js/vue.min.js'
+                ]
+            )
+        })
+
+    }
+    else {
     event.respondWith(
         caches.match(event.request).then((response) => {
             if (response) {
-                console.log(event.request.url + 'load from cache');
+                console.log('load from cache ' + event.request.url);
                 return response;
             }
             else {
-                fetch(event.request).then((response) => {
+              return  fetch(event.request).then((response) => {
                     return response;
                 }).catch((err)=>{
                     console.log('err:'+err.toString());
                 })
             }
         })
-    );
+    );}
 });
