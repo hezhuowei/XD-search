@@ -1,4 +1,4 @@
-# something-in-one
+# I only want to search
 ------
 
 适配手机的搜索引擎导航，单页webapp，默认注册serviceworker以开启cache，只有第一次需要网络加载本页。
