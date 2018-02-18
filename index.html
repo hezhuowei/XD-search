@@ -24,19 +24,23 @@
             bottom: 1em;
             position: fixed;
             text-align: center;
-            color:#555555;
+            color: #555555;
 
         }
-        a{
+
+        a {
             text-decoration: none;
         }
-        footer a:link{
-            color:#555555;
+
+        footer a:link {
+            color: #555555;
         }
-        footer a:visited{
-            color:#555555;
+
+        footer a:visited {
+            color: #555555;
         }
-        footer p{
+
+        footer p {
             font-size: 0.5em;
         }
 
@@ -84,7 +88,11 @@
             </div>
             <div class="input-group">
                 <div>
-                    <input v-model="input_text" type="search" onsearch="search()">
+                    <input v-model="input_text" type="text" oninput="suggestion()"  list="sug_list">
+                    <datalist id="sug_list" v-html="v_sug_list">
+
+                        <option value="ssssds"></option>
+                    </datalist>
                     <input value="Search" type="button" onclick="search()">
                 </div>
             </div>
@@ -95,6 +103,7 @@
     <a href="https://github.com/hezhuowei/I-only-want-to-search">Github</a>
     <p>Hosted by <a href="https://pages.coding.me" style="font-weight: bold">Coding Pages</a></p>
 </footer>
+<script id="jsonp"></script>
 <script src="js/jquery-3.2.1.min.js"></script>
 <script src="js/vue.min.js"></script>
 <script>
@@ -115,6 +124,7 @@
     let vm = new Vue({
         el: '#app',
         data: {
+            v_sug_list:"",
             input_text: "",
             logo: config.default_search_engine,
             group: ""
@@ -143,6 +153,30 @@
         window.location.href = engine_list[config.default_search_engine] + vm.$data.input_text;
     };
 
+    /*jsonp跨域调用百度suggestion*/
+    const suggestion = () => {
+        setTimeout(()=>{
+            const old_jsonp=document.getElementById("jsonp");
+            document.body.removeChild(old_jsonp);
+            const wd = vm.$data.input_text;
+            const new_jsonp=document.createElement('script');
+            new_jsonp.id='jsonp';
+            new_jsonp.src=`http://suggestion.baidu.com/su?wd=${wd}`;
+            document.body.appendChild(new_jsonp)
+        },100)
+
+    };
+    /*百度suggestion回调*/
+    window.baidu = {
+        "sug": (req) => {             /*返回json*/
+            const arr = req.s;
+            vm.$data.v_sug_list='';
+            for (let i in arr) {
+                const wd = arr[i];
+                vm.$data.v_sug_list += `<option value="${wd}"></option>`;
+            }
+        }
+    };
 
     /*service worker*/
     if ('serviceWorker' in navigator) {
@@ -174,12 +208,15 @@
             $('#group').slideToggle(150);
             $('footer').fadeToggle(150);
         });
-        $('input').keyup((e)=>{
-            if(e.keyCode == 13){
+        $('input').keyup((e) => {
+            if (e.keyCode == 13) {
                 search();
             }
+
         })
     });
+
+
 </script>
 </body>
 </html>
