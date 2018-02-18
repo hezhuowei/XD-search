@@ -90,8 +90,6 @@
                 <div>
                     <input v-model="input_text" type="text" oninput="suggestion()"  list="sug_list">
                     <datalist id="sug_list" v-html="v_sug_list">
-
-                        <option value="ssssds"></option>
                     </datalist>
                     <input value="Search" type="button" onclick="search()">
                 </div>
@@ -138,7 +136,6 @@
         $('#group').stop();
         $('#group').slideToggle(150);
         $('footer').fadeToggle(150);
-
     };
     const update_group = (default_engine) => {
         let item = '';
@@ -152,7 +149,6 @@
     const search = () => {
         window.location.href = engine_list[config.default_search_engine] + vm.$data.input_text;
     };
-
     /*jsonp跨域调用百度suggestion*/
     const suggestion = () => {
         setTimeout(()=>{
@@ -164,7 +160,6 @@
             new_jsonp.src=`https://sp0.baidu.com/5a1Fazu8AA54nxGko9WTAnF6hhy/su?wd=${wd}`;
             document.body.appendChild(new_jsonp)
         },100)
-
     };
     /*百度suggestion回调*/
     window.baidu = {
@@ -177,7 +172,6 @@
             }
         }
     };
-
     /*service worker*/
     if ('serviceWorker' in navigator) {
         navigator.serviceWorker.register('/sw.js', {scope: '/'}
@@ -189,8 +183,6 @@
             console.log(`service worker registration failed with${err}`)
         });
     }
-
-
     $(document).ready(function () {
         update_group(config.default_search_engine);
         $('input').focus(
@@ -215,8 +207,6 @@
 
         })
     });
-
-
 </script>
 </body>
 </html>
