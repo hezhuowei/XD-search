@@ -1,12 +1,8 @@
-# I only want to search
+# XD search
+https://www.binaryio.top
 ------
 
-适配手机的搜索引擎导航，单页webapp，默认注册serviceworker以开启cache，只有第一次需要网络加载本页。
-
-#### demo
-http://www.binaryio.top
-------
-~~Bootstrap~~ +vue.js+Jquery
+适配手机的简单搜索引擎导航，单页webapp，默认注册serviceworker以开启cache，只有第一次需要网络加载本页。
 
 ## Note 
 

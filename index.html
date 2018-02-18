@@ -19,11 +19,25 @@
         }
 
         footer {
+            font-size: 0.7em;
             width: 100%;
-            bottom: 3em;
+            bottom: 1em;
             position: fixed;
             text-align: center;
-            color: #0000004d;
+            color:#555555;
+
+        }
+        a{
+            text-decoration: none;
+        }
+        footer a:link{
+            color:#555555;
+        }
+        footer a:visited{
+            color:#555555;
+        }
+        footer p{
+            font-size: 0.5em;
         }
 
         .input-group {
@@ -79,6 +93,7 @@
 </div>
 <footer>
     <a href="https://github.com/hezhuowei/I-only-want-to-search">Github</a>
+    <p>Hosted by <a href="https://pages.coding.me" style="font-weight: bold">Coding Pages</a></p>
 </footer>
 <script src="js/jquery-3.2.1.min.js"></script>
 <script src="js/vue.min.js"></script>
@@ -92,8 +107,8 @@
         "Google": "https://www.google.com/search?q=",
         "Baidu": "https://m.baidu.com/s?word=",
         "Sougo": "https://m.sogou.com/web/searchList.jsp?keyword=",
-        "Bing": "https://www.bing.com/search?q=",
-        "360": "https://m.so.com/s?q=",
+        /*"Bing": "https://www.bing.com/search?q=",
+        "360": "https://m.so.com/s?q=",*/
         "Zhihu": "https://zhihu.sogou.com/zhihuwap?query="
     };
     let config = JSON.parse(localStorage.config);
@@ -111,7 +126,8 @@
         update_group(str);
         vm.$data.logo = str;
         $('#group').stop();
-        $('#group').slideToggle();
+        $('#group').slideToggle(150);
+        $('footer').fadeToggle(150);
 
     };
     const update_group = (default_engine) => {
@@ -155,8 +171,8 @@
         );
         $('.logo').find('span').click(() => {
             $('#group').stop();
-            $('#group').slideToggle();
-            $('footer').fadeToggle(200);
+            $('#group').slideToggle(150);
+            $('footer').fadeToggle(150);
         });
         $('input').keyup((e)=>{
             if(e.keyCode == 13){
