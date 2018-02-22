@@ -5,11 +5,13 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Search</title>
     <style>
-        body{
+        body {
+            margin: 0;
             background-color: #fafafa;
         }
+
         .logo {
-            color:#616161 ;
+            color: #616161;
             font-size: 2em;
         }
 
@@ -44,12 +46,9 @@
             color: #555555;
         }
 
-        footer p {
-            font-size: 0.5em;
-        }
-
         .input-group {
-            justify-content:center;
+            margin-top: 0.8em;
+            justify-content: center;
             display: flex;
         }
 
@@ -59,14 +58,25 @@
         }
 
         .input-group > div > input {
-            padding:0 10px 0 10px;
+            padding: 0 10px 0 10px;
             border: 0;
             height: 3em;
         }
 
         .input-group > div > input[type="button"] {
+            width: 5em;
             color: #ffffff;
             background: cadetblue;
+        }
+
+        .input-group > div > input[type="text"] {
+            width: 10em;
+        }
+
+        .input-group > div > input[class=btn-setting] {
+            width: 0em;
+            padding: 0;
+            background-color: dimgrey;
         }
 
         #group {
@@ -74,7 +84,7 @@
         }
 
         #group li {
-            margin-top: 1em;
+            margin-top: 0.5em;
         }
 
         .content {
@@ -82,18 +92,21 @@
             justify-content: center;
             text-align: center;
         }
-        .sug_list{
+
+        .sug_list {
             background-color: #f5f5f5;
             display: flex;
             justify-content: center;
             box-shadow: 1px 1px 2px 0 rgba(133, 133, 133, .50);
         }
-        .sug_list>ul{
+
+        .sug_list > ul {
             width: 100%;
             margin: 0;
             padding: 0;
         }
-        .sug_list>ul>li{
+
+        .sug_list > ul > li {
             color: cadetblue;
             text-align: left;
             padding: 0.2em;
@@ -109,13 +122,14 @@
             <div>
                 <div class="logo">
                     <span v-html="logo"></span>
-                    <ul id="group" v-html="group">
+                    <ul id="group" v-html="group" style="display: none">
                     </ul>
                 </div>
                 <div class="input-group">
                     <div>
-                        <input v-model="input_text" type="text" oninput="suggestion()" >
-                        <input value="Search" type="button" onclick="search()">
+                        <input v-model="input_text" type="text" oninput="suggestion()">
+                        <input class="btn-search" value="Search" type="button" onclick="search()">
+                        <input class="btn-setting" value="Settings" type="button" onclick="settings()">
                     </div>
                 </div>
                 <div class="sug_list">
@@ -128,7 +142,6 @@
 </div>
 <footer>
     <a href="https://github.com/hezhuowei/I-only-want-to-search">Github</a>
-    <p>Hosted by <a href="https://pages.coding.me" style="font-weight: bold">Coding Pages</a></p>
 </footer>
 <script id="jsonp"></script>
 <script src="js/jquery-3.2.1.min.js"></script>
@@ -151,20 +164,41 @@
     let vm = new Vue({
         el: '#app',
         data: {
-            v_sug_list:"",
+            v_sug_list: "",
             input_text: "",
             logo: config.default_search_engine,
             group: ""
         }
     });
+
+    /*列表切换动画*/
+    const animation_toggle = () => {
+        if (document.getElementById('group').style.display != 'none') {
+            $('.sug_list').stop();
+            $('input').stop();
+            $(':text').animate({width: '10em', padding: '0 10px 0 10px'}, 200);
+            $('.sug_list').slideToggle(150);
+            $('.btn-search').animate({width: '5em', padding: '0 10px 0 10px'}, 300);
+            $('.btn-setting').animate({width: '0', padding: '0 0 0 0'}, 300);
+        } else {
+            $('.sug_list').stop();
+            $('input').stop();
+            $(':text').animate({width: '0', padding: '0 0 0 0'}, 200);
+            $('.sug_list').slideToggle(150);
+            $('.btn-search').animate({width: '0', padding: '0 0 0 0'}, 300);
+            $('.btn-setting').animate({width: '10em', padding: '0 10px 0 10px'}, 300);
+        }
+        $('#group').stop();
+        $('#group').slideToggle(150);
+        $('footer').fadeToggle(150);
+    };
+
     const set_default_engine = (str) => {
         config.default_search_engine = str;
         localStorage.config = JSON.stringify(config);
         update_group(str);
         vm.$data.logo = str;
-        $('#group').stop();
-        $('#group').slideToggle(150);
-        $('footer').fadeToggle(150);
+        animation_toggle();
     };
     const update_group = (default_engine) => {
         let item = '';
@@ -176,35 +210,38 @@
         vm.$data.group = item;
     };
     const search = () => {
-        window.location.href = engine_list[config.default_search_engine] + vm.$data.input_text;
+        self.location.href = engine_list[config.default_search_engine] + vm.$data.input_text;
     };
+    const settings=()=>{
+        self.location.pathname=`/settings.html`
+    }
     /*jsonp跨域调用百度suggestion*/
     const suggestion = () => {
-        setTimeout(()=>{
-            const old_jsonp=document.getElementById("jsonp");
+        setTimeout(() => {
+            const old_jsonp = document.getElementById("jsonp");
             document.body.removeChild(old_jsonp);
             const wd = vm.$data.input_text;
-            const new_jsonp=document.createElement('script');
-            new_jsonp.id='jsonp';
-            new_jsonp.src=`https://sp0.baidu.com/5a1Fazu8AA54nxGko9WTAnF6hhy/su?wd=${wd}`;
+            const new_jsonp = document.createElement('script');
+            new_jsonp.id = 'jsonp';
+            new_jsonp.src = `https://sp0.baidu.com/5a1Fazu8AA54nxGko9WTAnF6hhy/su?wd=${wd}`;
             document.body.appendChild(new_jsonp)
-        },100)
+        }, 100)
     };
     /*百度suggestion回调*/
     window.baidu = {
         "sug": (req) => {             /*返回json*/
             const arr = req.s;
-            let sug_items='';
+            let sug_items = '';
             for (let i in arr) {
                 const wd = arr[i];
-                sug_items+= `<li onclick="sug_change(this)">${wd}</li>`;
+                sug_items += `<li onclick="sug_change(this)">${wd}</li>`;
             }
-            vm.$data.v_sug_list=sug_items;
+            vm.$data.v_sug_list = sug_items;
         }
     };
     /**/
-    const sug_change=(e)=>{
-        vm.$data.input_text=e.innerHTML;
+    const sug_change = (e) => {
+        vm.$data.input_text = e.innerHTML;
     }
     /*service worker*/
     if ('serviceWorker' in navigator) {
@@ -217,9 +254,7 @@
             console.log(`service worker registration failed with${err}`)
         });
     }
-    $(document).ready(function () {
-        update_group(config.default_search_engine);
-        $('')
+    const hide_footer_when_keyb_show = () => {
         $('input').focus(
             () => {
                 $('footer').hide();
@@ -230,16 +265,18 @@
                 $('footer').show();
             }
         );
+    };
+    $(document).ready(function () {
+        update_group(config.default_search_engine);
+        hide_footer_when_keyb_show();
+
         $('.logo').find('span').click(() => {
-            $('#group').stop();
-            $('#group').slideToggle(150);
-            $('footer').fadeToggle(150);
+            animation_toggle();
         });
         $('input').keyup((e) => {
             if (e.keyCode == 13) {
                 search();
             }
-
         })
     });
 </script>
