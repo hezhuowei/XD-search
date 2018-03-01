@@ -2,9 +2,264 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+
     <title>Settings</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            margin: 0;
+            background-color: #fafafa;
+        }
+
+        li {
+            width: 100%;
+            display: flex;
+            list-style: none;
+            margin: 1em 0 1em 0;
+            align-items: center;
+        }
+
+        .eng_name {
+            color: #555555;
+            font-size: 1.5em;
+            font-weight: bold;
+
+        }
+
+        .eng_url {
+
+            font-size: 1em;
+        }
+
+        .btn-del {
+            margin-left: 0.5em;
+            border: 0;
+            border-radius: 1em;
+            text-align: center;
+            font-size: 1.2em;
+            font-weight: bold;
+            width: 1.5em;
+            height: 1.5em;
+            color: white;
+        }
+
+        #app {
+            margin: 0 1em 0 1em;
+        }
+
+        .btn-add {
+            flex-grow: 1;
+            height: 4em;
+            border: 3px dotted #88888830;
+            color: #888888;
+            background: #fafafa;
+        }
+
+        .btn-load {
+            width: 5em;
+            height: 4em;
+            border: 3px dotted #88888830;
+            border-left: 0;
+            color: #888888;
+            background: #fafafa;
+        }
+
+        .width_full {
+            width: 100%;
+        }
+
+        li div {
+            white-space: normal;
+            word-break: break-all;
+            word-wrap: break-word;
+        }
+
+        .btn-group {
+            justify-content: space-between;
+            display: flex;
+            margin: 1em 0 1em 0;
+        }
+
+        .btn-group button {
+            border: 0;
+            border-radius: 1em;
+            width: 47.5%;
+            height: 2em;
+            color: white;
+        }
+
+        .red {
+            background: #cc5533;
+        }
+
+        .green {
+            background: cadetblue
+        }
+
+        .flex {
+            display: flex;
+        }
+        #md{
+            display: none;
+        }
+        .md >div{
+            display: flex;
+            top: 0;
+            left: 0;
+            height: 100%;
+            width: 100%;;
+            background-color: #55555550;
+            position: fixed;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .md-content {
+            margin: 0.5em;
+            padding: 1em;
+            height: 30%;
+            width: 100%;
+            background-color: #fafafa;
+            box-shadow: 2px 2px 2px 2px #55555550;
+        }
+
+        .input {
+
+            color: #555555;
+            margin-top: 1em;
+            height: 2em;
+            display: flex;
+            align-items: center;
+            border-bottom: 2px #aaaaaa solid;
+        }
+
+        .input input{
+            outline: 0;
+            height: 2em;
+            border: 0;
+            width: 100%;
+            background: transparent;
+        }
+        .input label{
+
+            width: 4em;
+        }
+    </style>
 </head>
 <body>
+<div id="app">
+    <div>
+        <ul v-html="engine_list"></ul>
+        <div class="flex">
+            <button class="btn-add " onclick="add()">Add+</button>
+            <button class="btn-load" onclick="load()">Load<br>default</button>
+        </div>
+    </div>
+    <div class="btn-group">
+        <button class="green" onclick="ok()">OK</button>
+        <button class="red" onclick="cancle()">Cancle</button>
+    </div>
+    <div id="md" class="md">
+        <div>
+            <div class="md-content">
+                <div class="input">
+                    <label for="s_name">NAME</label>
+                    <input v-model="s_name"  id="s_name" type="text">
+                </div>
+                <div class="input">
+                    <label for="s_url">URL</label>
+                    <input v-model="s_url" id="s_url" type="text">
+                </div>
+                <div class="btn-group">
+                    <button class="green" onclick="md_ok()">OK</button>
+                    <button class="red" onclick="md_cancle()">Cancle</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<script src="js/jquery-3.2.1.min.js"></script>
+<script src="js/vue.min.js"></script>
+<script>
+    const vm = new Vue({
+        el: "#app",
+        data: {
+            s_name:'',
+            s_url:'',
+            engine_list: '',
+        }
+    })
+    let config = JSON.parse(localStorage.config);
+    const show_engine_list = () => {
+        let DOM_list = ''
+        for (let i in config.engine_list) {
+            DOM_list += `
+<li>
+  <div class="width_full" onclick="edit(${i})">
+    <div class="eng_name">${config.engine_list[i].name}</div>
+    <div class="eng_url">${config.engine_list[i].url}</div>
+  </div>
+  <div><input class="btn-del red" type="button" value="×" onclick="del(${i})"></div>
+</li>`
+        }
+        vm.$data.engine_list = DOM_list;
+    };
+    const del = (e) => {
+        config.engine_list.splice(e, 1);
+        show_engine_list();
+    }
+    const cancle = () => {
+        config = JSON.parse(localStorage.config);
+        show_engine_list();
+    };
+    const ok = () => {
+        localStorage.config = JSON.stringify(config);
+        alert('successful');
+    };
+    const load = () => {
+        config = JSON.parse(localStorage.default_config);
+        show_engine_list();
+    }
+    const add=()=>{
+        vm.$data.s_name='';
+        vm.$data.s_url='';
+        $('#md').data('engine_list-i',null);
+        $('#md').fadeIn(250);
+    };
+    const edit=(e)=>{
+        vm.$data.s_name=config.engine_list[e].name;
+        vm.$data.s_url=config.engine_list[e].url;
+        $('#md').data('engine_list-i',e);
+        $('#md').fadeIn(250);
+    }
+    const md_cancle=()=>{
+        $('#md').fadeOut(250);
+    }
+    const md_ok=()=>{
+        if($('#md').data('engine_list-i')!=null){
+            const i=$('#md').data('engine_list-i');
+            config.engine_list[i].name=vm.$data.s_name;
+            config.engine_list[i].url=vm.$data.s_url;
+            $('#md').fadeOut(250);
+            show_engine_list();
+        }else {
+            config.engine_list.push({
+                "name":vm.$data.s_name,
+                "url":vm.$data.s_url
+            })
+            $('#md').fadeOut(250);
+            show_engine_list();
+        };
+    };
+    /******/
 
+    show_engine_list();
+
+</script>
 </body>
 </html>

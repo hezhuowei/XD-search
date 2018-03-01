@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
     <title>Search</title>
     <style>
         body {
@@ -147,20 +147,27 @@
 <script src="js/jquery-3.2.1.min.js"></script>
 <script src="js/vue.min.js"></script>
 <script>
-    if (!localStorage.config) {
-        localStorage.config = JSON.stringify({
-            "default_search_engine": "Baidu"
-        })
-    }
-    const engine_list = {
-        "Google": "https://www.google.com/search?q=",
-        "Baidu": "https://m.baidu.com/s?word=",
-        "Sougo": "https://m.sogou.com/web/searchList.jsp?keyword=",
-        /*"Bing": "https://www.bing.com/search?q=",
-        "360": "https://m.so.com/s?q=",*/
-        "Zhihu": "https://zhihu.sogou.com/zhihuwap?query="
+    const default_config={
+        "default_search_engine": "Baidu",
+        "engine_list" : [
+            {"name":"Google", "url": "https://www.google.com/search?q="},
+            { "name":"Baidu", "url": "https://m.baidu.com/s?word="},
+            {"name":"Sougo", "url": "https://m.sogou.com/web/searchList.jsp?keyword="} ,
+            {"name":"Bing", "url": "https://www.bing.com/search?q="},
+            {"name":"360", "url": "https://m.so.com/s?q="},
+            {"name":"Zhihu", "url": "https://zhihu.sogou.com/zhihuwap?query="}
+]
     };
-    let config = JSON.parse(localStorage.config);
+    if (!localStorage.config) {
+        localStorage.config = JSON.stringify(default_config);
+    }
+    if(!localStorage.default_config){
+        localStorage.default_config = JSON.stringify(default_config);
+    }
+    let config =JSON.parse(localStorage.config);
+    const engine_list=config.engine_list;
+
+
     let vm = new Vue({
         el: '#app',
         data: {
@@ -203,14 +210,17 @@
     const update_group = (default_engine) => {
         let item = '';
         for (let i in engine_list) {
-            if (i !== default_engine) {
-                item += `<li onclick="set_default_engine('${i}')">${i}</li>`
+            if (engine_list[i].name !== default_engine) {
+
+                item += `<li onclick="set_default_engine('${engine_list[i].name}')">${engine_list[i].name}</li>`
             }
         }
         vm.$data.group = item;
     };
     const search = () => {
-        self.location.href = engine_list[config.default_search_engine] + vm.$data.input_text;
+        const url=engine_list.find((n)=>{return n.name===config.default_search_engine}).url
+
+        self.location.href = url + vm.$data.input_text;
     };
     const settings=()=>{
         self.location.pathname=`/settings.html`
