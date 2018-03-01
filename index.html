@@ -147,25 +147,30 @@
 <script src="js/jquery-3.2.1.min.js"></script>
 <script src="js/vue.min.js"></script>
 <script>
-    const default_config={
+    const default_config = {
         "default_search_engine": "Baidu",
-        "engine_list" : [
-            {"name":"Google", "url": "https://www.google.com/search?q="},
-            { "name":"Baidu", "url": "https://m.baidu.com/s?word="},
-            {"name":"Sougo", "url": "https://m.sogou.com/web/searchList.jsp?keyword="} ,
-            {"name":"Bing", "url": "https://www.bing.com/search?q="},
-            {"name":"360", "url": "https://m.so.com/s?q="},
-            {"name":"Zhihu", "url": "https://zhihu.sogou.com/zhihuwap?query="}
-]
+        "engine_list": [
+            {"name": "Google", "url": "https://www.google.com/search?q="},
+            {"name": "Baidu", "url": "https://m.baidu.com/s?word="},
+            {"name": "Sougo", "url": "https://m.sogou.com/web/searchList.jsp?keyword="},
+            {"name": "Bing", "url": "https://www.bing.com/search?q="},
+            {"name": "360", "url": "https://m.so.com/s?q="},
+            {"name": "Zhihu", "url": "https://zhihu.sogou.com/zhihuwap?query="}
+        ],
+        "version":"1.0"
     };
     if (!localStorage.config) {
         localStorage.config = JSON.stringify(default_config);
     }
-    if(!localStorage.default_config){
+    if (!localStorage.default_config) {
         localStorage.default_config = JSON.stringify(default_config);
     }
-    let config =JSON.parse(localStorage.config);
-    const engine_list=config.engine_list;
+    if(!localStorage.config.version || localStorage.config.version!=="1.0"){
+        localStorage.config = JSON.stringify(default_config);
+        localStorage.default_config = JSON.stringify(default_config);
+    }
+    let config = JSON.parse(localStorage.config);
+    const engine_list = config.engine_list;
 
 
     let vm = new Vue({
@@ -218,12 +223,14 @@
         vm.$data.group = item;
     };
     const search = () => {
-        const url=engine_list.find((n)=>{return n.name===config.default_search_engine}).url
+        const url = engine_list.find((n) => {
+            return n.name === config.default_search_engine
+        }).url
 
         self.location.href = url + vm.$data.input_text;
     };
-    const settings=()=>{
-        self.location.pathname=`/settings.html`
+    const settings = () => {
+        self.location.pathname = `/settings.html`
     }
     /*jsonp跨域调用百度suggestion*/
     const suggestion = () => {
