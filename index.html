@@ -167,7 +167,7 @@
     }
 
     let config = JSON.parse(localStorage.config);
-    if(config.version || config.version!=="1.0"){
+    if(!config.version || config.version!=="1.0"){
         localStorage.config = JSON.stringify(default_config);
         localStorage.default_config = JSON.stringify(default_config);
     }
