@@ -165,11 +165,12 @@
     if (!localStorage.default_config) {
         localStorage.default_config = JSON.stringify(default_config);
     }
-    if(!localStorage.config.version || localStorage.config.version!=="1.0"){
+
+    let config = JSON.parse(localStorage.config);
+    if(config.version || config.version!=="1.0"){
         localStorage.config = JSON.stringify(default_config);
         localStorage.default_config = JSON.stringify(default_config);
     }
-    let config = JSON.parse(localStorage.config);
     const engine_list = config.engine_list;
 
 
