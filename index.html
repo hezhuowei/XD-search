@@ -87,6 +87,7 @@
             margin-top: 0.5em;
         }
 
+
         .content {
             display: flex;
             justify-content: center;
@@ -112,6 +113,9 @@
             padding: 0.2em;
             padding-left: 0.5em;
             list-style: none;
+        }
+        .float-right{
+            float: right;
         }
     </style>
 </head>
@@ -252,14 +256,18 @@
             let sug_items = '';
             for (let i in arr) {
                 const wd = arr[i];
-                sug_items += `<li onclick="sug_change(this)">${wd}</li>`;
+                sug_items += `<li><span  data-text="${wd}" onclick="sug_change(this)">${wd}</span><span class="float-right" data-text="${wd}" onclick="sug_copy(this)">↖</span></li>`;
             }
             vm.$data.v_sug_list = sug_items;
         }
     };
     /**/
+    const sug_copy=(e)=>{
+        vm.$data.input_text = e.dataset.text;
+    }
     const sug_change = (e) => {
-        vm.$data.input_text = e.innerHTML;
+        vm.$data.input_text = e.dataset.text;
+        search();
     }
     /*service worker*/
     if ('serviceWorker' in navigator) {

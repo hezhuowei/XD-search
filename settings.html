@@ -113,7 +113,7 @@
             left: 0;
             height: 100%;
             width: 100%;;
-            background-color: #55555550;
+            background-color: #55555570;
             position: fixed;
             justify-content: center;
             align-items: center;
@@ -122,7 +122,7 @@
         .md-content {
             margin: 0.5em;
             padding: 1em;
-            height: 30%;
+            height: 10em;
             width: 100%;
             background-color: #fafafa;
             box-shadow: 2px 2px 2px 2px #55555550;
@@ -149,10 +149,39 @@
 
             width: 4em;
         }
+        footer {
+            font-size: 0.7em;
+            width: 100%;
+            margin-top: 10em;
+            text-align: center;
+            color: #b5b5b5;
+
+        }
+        .log{
+            width: 100%;
+            display: none;
+            position: fixed;
+            left: 0;
+            top: 0;
+            font-weight: bold;
+            text-align: center;
+
+            color: cadetblue;
+
+        }
+        .log>div{
+            margin:0 0.2em 0 0.2em;
+            padding: 1em;
+            background: white;
+            box-shadow: 0 1px 4px 0 rgba(133, 133, 133, .50);
+        }
     </style>
 </head>
 <body>
 <div id="app">
+    <div class="log">
+       <div>{{log}}</div>
+    </div>
     <div>
         <ul v-html="engine_list"></ul>
         <div class="flex">
@@ -162,7 +191,7 @@
     </div>
     <div class="btn-group">
         <button class="green" onclick="ok()">OK</button>
-        <button class="red" onclick="cancle()">Cancle</button>
+        <button class="red" onclick="cancel()">cancel</button>
     </div>
     <div id="md" class="md">
         <div>
@@ -177,11 +206,14 @@
                 </div>
                 <div class="btn-group">
                     <button class="green" onclick="md_ok()">OK</button>
-                    <button class="red" onclick="md_cancle()">Cancle</button>
+                    <button class="red" onclick="md_cancel()">cancel</button>
                 </div>
             </div>
         </div>
     </div>
+    <footer>
+        <div onclick="clean_cache()">clean cache</div>
+    </footer>
 </div>
 <script src="js/jquery-3.2.1.min.js"></script>
 <script src="js/vue.min.js"></script>
@@ -192,11 +224,19 @@
             s_name:'',
             s_url:'',
             engine_list: '',
+            log:'',
         }
-    })
+    });
     let config = JSON.parse(localStorage.config);
+    const log=(str)=>{
+        vm.$data.log=str;
+        $('.log').fadeIn(200);
+        setTimeout(()=>{
+            $('.log').fadeOut(300);
+        },1000)
+    }
     const show_engine_list = () => {
-        let DOM_list = ''
+        let DOM_list = '';
         for (let i in config.engine_list) {
             DOM_list += `
 <li>
@@ -210,20 +250,23 @@
         vm.$data.engine_list = DOM_list;
     };
     const del = (e) => {
+        log(`delete "${config.engine_list[e].name}"`);
         config.engine_list.splice(e, 1);
         show_engine_list();
     }
-    const cancle = () => {
+    const cancel = () => {
         config = JSON.parse(localStorage.config);
         show_engine_list();
+        log('cancel');
     };
     const ok = () => {
         localStorage.config = JSON.stringify(config);
-        alert('successful');
+        self.location.pathname='/';
     };
     const load = () => {
         config = JSON.parse(localStorage.default_config);
         show_engine_list();
+        log('loaded successfully')
     }
     const add=()=>{
         vm.$data.s_name='';
@@ -237,7 +280,7 @@
         $('#md').data('engine_list-i',e);
         $('#md').fadeIn(250);
     }
-    const md_cancle=()=>{
+    const md_cancel=()=>{
         $('#md').fadeOut(250);
     }
     const md_ok=()=>{
@@ -251,15 +294,26 @@
             config.engine_list.push({
                 "name":vm.$data.s_name,
                 "url":vm.$data.s_url
-            })
+            });
             $('#md').fadeOut(250);
             show_engine_list();
         };
     };
+    const clean_cache=()=>{
+        if ('serviceWorker' in navigator) {
+            navigator.serviceWorker.register('/sw.js', {scope: '/'}
+            ).then(
+                (reg) => {
+                    reg.unregister();
+                    log('unregister service worker');
+                }
+            ).catch((err) => {
+                log(`service worker registration failed with${err}`)
+            });
+        }
+    };
     /******/
-
     show_engine_list();
-
 </script>
 </body>
 </html>
