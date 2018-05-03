@@ -74,7 +74,7 @@
         }
 
         .input-group > div > input[class=btn-setting] {
-            width: 0em;
+            width: 0;
             padding: 0;
             background-color: dimgrey;
         }
@@ -89,9 +89,16 @@
 
 
         .content {
+            width: 100%;
             display: flex;
             justify-content: center;
             text-align: center;
+        }
+        .content-center{
+            position: absolute;
+            left: 50%;
+            top: 40%;
+            transform: translate(-50%,-50%);
         }
 
         .sug_list {
@@ -110,8 +117,7 @@
         .sug_list > ul > li {
             color: cadetblue;
             text-align: left;
-            padding: 0.2em;
-            padding-left: 0.5em;
+            padding: 0.2em 0.2em 0.2em 0.5em;
             list-style: none;
         }
         .float-right{
@@ -151,6 +157,7 @@
 <script src="js/jquery-3.2.1.min.js"></script>
 <script src="js/vue.min.js"></script>
 <script>
+    "use strict";
     const default_config = {
         "default_search_engine": "Baidu",
         "engine_list": [
@@ -161,7 +168,9 @@
             {"name": "360", "url": "https://m.so.com/s?q="},
             {"name": "Zhihu", "url": "https://zhihu.sogou.com/zhihuwap?query="}
         ],
-        "version":"1.0"
+        "theme":"0",
+        "content_center":true,
+        "version":"1.01"
     };
     if (!localStorage.config) {
         localStorage.config = JSON.stringify(default_config);
@@ -171,7 +180,7 @@
     }
 
     let config = JSON.parse(localStorage.config);
-    if(!config.version || config.version!=="1.0"){
+    if(!config.version || config.version!=="1.01"){
         localStorage.config = JSON.stringify(default_config);
         localStorage.default_config = JSON.stringify(default_config);
     }
@@ -190,7 +199,7 @@
 
     /*列表切换动画*/
     const animation_toggle = () => {
-        if (document.getElementById('group').style.display != 'none') {
+        if (document.getElementById('group').style.display !== 'none') {
             $('.sug_list').stop();
             $('input').stop();
             $(':text').animate({width: '10em', padding: '0 10px 0 10px'}, 200);
@@ -230,13 +239,13 @@
     const search = () => {
         const url = engine_list.find((n) => {
             return n.name === config.default_search_engine
-        }).url
+        }).url;
 
         self.location.href = url + vm.$data.input_text;
     };
     const settings = () => {
-        self.location.pathname = `/settings.html`
-    }
+        self.location.href = `./settings.html`
+    };
     /*jsonp跨域调用百度suggestion*/
     const suggestion = () => {
         setTimeout(() => {
@@ -259,16 +268,24 @@
                 sug_items += `<li><span  data-text="${wd}" onclick="sug_change(this)">${wd}</span><span class="float-right" data-text="${wd}" onclick="sug_copy(this)">↖</span></li>`;
             }
             vm.$data.v_sug_list = sug_items;
+            if(config.content_center ){
+                if( req.s.length!==0){
+                    $('.content').removeClass('content-center');
+                }else {
+                    $('.content').addClass('content-center');
+                }
+            }
+
         }
     };
     /**/
     const sug_copy=(e)=>{
         vm.$data.input_text = e.dataset.text;
-    }
+    };
     const sug_change = (e) => {
         vm.$data.input_text = e.dataset.text;
         search();
-    }
+    };
     /*service worker*/
     if ('serviceWorker' in navigator) {
         navigator.serviceWorker.register('/sw.js', {scope: '/'}
@@ -289,10 +306,14 @@
         $('input').blur(
             () => {
                 $('footer').show();
+
             }
         );
     };
     $(document).ready(function () {
+        if(config.content_center){
+            $('.content').addClass('content-center');
+        }
         update_group(config.default_search_engine);
         hide_footer_when_keyb_show();
 
@@ -300,7 +321,7 @@
             animation_toggle();
         });
         $('input').keyup((e) => {
-            if (e.keyCode == 13) {
+            if (e.keyCode === 13) {
                 search();
             }
         })

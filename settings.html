@@ -175,6 +175,74 @@
             background: white;
             box-shadow: 0 1px 4px 0 rgba(133, 133, 133, .50);
         }
+        .theme-demo{
+            display: flex;width: 100%
+        }
+        .theme-demo>div{
+            margin-right: 1em;
+            border:1px solid #88888830 ;
+            -webkit-border-radius: 1em;
+            -moz-border-radius: 1em;
+            border-radius: 1em;
+        }
+        .theme-demo>div:last-child{
+            margin-right: 0;
+        }
+        .theme-demo-0{
+            flex-grow:1;
+            height:15em;
+
+        }
+        .theme-demo-1 .demo-content{
+            position: relative;
+            left: 50%;
+            top: 40%;
+            transform: translate(-50%,-50%);
+        }
+        .theme-demo-1{
+            flex-grow:1;
+            height:15em;
+
+        }
+        .demo-content{
+            text-align: center;
+            align-items: center;
+        }
+        .demo-logo{
+            color:#616161;
+        }
+        .demo-btn{
+
+            display: block;
+            width: 1.5em;
+            height: 1em;
+            background-color: cadetblue;
+        }
+        .demo-input{
+
+            width: 4em;
+            height: 1em;
+
+        }
+        .demo-input-group{
+            display: flex;
+            margin-top: 0.2em;
+            justify-content: center;
+
+        }
+        .demo-input-group>div{
+            box-shadow: 0 1px 4px 0 rgba(133, 133, 133, .50);
+        }
+        .theme-demo-active{
+            border-style: none;
+            box-shadow: 1px 1px 5px 3px rgba(60, 50, 50, 0.20);
+        }
+        .theme-title{
+            color: #555555;
+            margin-top: 2em;
+            padding: 1em 1em 1em 0;
+
+        }
     </style>
 </head>
 <body>
@@ -187,6 +255,29 @@
         <div class="flex">
             <button class="btn-add " onclick="add()">Add+</button>
             <button class="btn-load" onclick="load()">Load<br>default</button>
+        </div>
+    </div>
+    <div>
+        <div>
+            <div class="theme-title">Themes:</div>
+            <div class="theme-demo">
+                <div class="theme-demo-0 theme-demo-active" onclick="select_theme('0')">
+                    <div class="demo-content">
+                        <div>
+                            <div class="demo-logo">Google</div>
+                            <div class="demo-input-group"><div class="demo-input"></div><div class="demo-btn"></div></div>
+                        </div>
+                    </div>
+                </div>
+                <div class="theme-demo-1" onclick="select_theme('1')">
+                    <div class="demo-content">
+                        <div>
+                            <div class="demo-logo">Google</div>
+                            <div class="demo-input-group"><div class="demo-input"></div><div class="demo-btn"></div></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
         </div>
     </div>
     <div class="btn-group">
@@ -234,7 +325,7 @@
         setTimeout(()=>{
             $('.log').fadeOut(300);
         },1000)
-    }
+    };
     const show_engine_list = () => {
         let DOM_list = '';
         for (let i in config.engine_list) {
@@ -253,7 +344,7 @@
         log(`delete "${config.engine_list[e].name}"`);
         config.engine_list.splice(e, 1);
         show_engine_list();
-    }
+    };
     const cancel = () => {
         config = JSON.parse(localStorage.config);
         show_engine_list();
@@ -261,13 +352,13 @@
     };
     const ok = () => {
         localStorage.config = JSON.stringify(config);
-        self.location.pathname='/';
+        self.location.href='./';
     };
     const load = () => {
         config = JSON.parse(localStorage.default_config);
         show_engine_list();
         log('loaded successfully')
-    }
+    };
     const add=()=>{
         vm.$data.s_name='';
         vm.$data.s_url='';
@@ -279,10 +370,10 @@
         vm.$data.s_url=config.engine_list[e].url;
         $('#md').data('engine_list-i',e);
         $('#md').fadeIn(250);
-    }
+    };
     const md_cancel=()=>{
         $('#md').fadeOut(250);
-    }
+    };
     const md_ok=()=>{
         if($('#md').data('engine_list-i')!=null){
             const i=$('#md').data('engine_list-i');
@@ -297,7 +388,7 @@
             });
             $('#md').fadeOut(250);
             show_engine_list();
-        };
+        }
     };
     const clean_cache=()=>{
         if ('serviceWorker' in navigator) {
@@ -312,6 +403,36 @@
             });
         }
     };
+    const update_theme_demo=()=>{
+        const n=config.theme;
+        $('.theme-demo').children(".theme-demo-active").removeClass('theme-demo-active');
+        switch (n){
+            case '0':
+                $('.theme-demo-0').addClass('theme-demo-active');
+                break;
+            case '1':
+                $('.theme-demo-1').addClass('theme-demo-active');
+                break;
+            default:
+                break;
+        }
+
+    };
+    const select_theme=(n)=>{
+        config.theme=n;
+        switch (n){
+            case '0':
+                config.content_center=false;
+                break;
+            case '1':
+                config.content_center=true;
+                break;
+            default:
+                break;
+        }
+        update_theme_demo()
+    };
+    update_theme_demo();
     /******/
     show_engine_list();
 </script>
