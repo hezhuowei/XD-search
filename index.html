@@ -160,6 +160,7 @@
 </div>
 <footer>
     <a href="https://github.com/hezhuowei/I-only-want-to-search">Github</a>
+    <div>v{{vsrsion}}</div>
 </footer>
 <script id="jsonp"></script>
 <script src="js/jquery-3.2.1.min.js"></script>
@@ -202,6 +203,7 @@
     let vm = new Vue({
         el: '#app',
         data: {
+            version:config.version,
             v_sug_list: "",
             v_history_list:"",
             input_text: "",

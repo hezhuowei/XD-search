@@ -370,6 +370,7 @@
 <script src="js/jquery-3.2.1.min.js"></script>
 <script src="js/vue.min.js"></script>
 <script>
+    const version='1.02';
     let config = JSON.parse(localStorage.config);
     const vm = new Vue({
         el: "#app",
@@ -519,9 +520,12 @@
         }
         update_theme_demo()
     };
-    $(document).ready(()=>{
-
-    });
+    const update=()=>{
+        if(version!==config.version){
+            clean_cache();
+        }
+    };
+    update();
     update_theme_demo();
     /******/
     show_engine_list();
