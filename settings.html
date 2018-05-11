@@ -51,6 +51,9 @@
         #app {
             margin: 0 1em 0 1em;
         }
+        #app >div {
+            margin-bottom: 2em;
+        }
 
         .btn-add {
             flex-grow: 1;
@@ -243,6 +246,52 @@
             padding: 1em 1em 1em 0;
 
         }
+        .advanced-settings-list >div{
+            margin:1em 0 1em 0;
+            display: flex;
+        }
+        .advanced-settings-list > div> span{
+            flex-grow: 1;
+        }
+        .checkbox{
+            transition: background-color 0.2s;
+            padding: 0.12em;
+            align-items: center;
+            width: 3.2em;
+            border-radius: 2em;
+            display: flex;
+            background-color: #cc5533;
+        }
+        .checkbox:before{
+            transition:margin-left 0.2s ease-in;
+            box-shadow: 0 0 2px rgba(0,0,0,0.5), inset 0 -18px 15px -10px rgba(0,0,0,0.05);
+            border-radius: 1em;
+            display: inline-block;
+            background-color: #fafafa;
+            height: 1.6em;
+            width: 1.6em;
+            content: "";
+        }
+
+        input[type='checkbox']{
+            display: none;
+        }
+        input[type='checkbox']:checked+ label{
+            transition: background-color 0.2s;
+            background-color:cadetblue ;
+        }
+        input[type='checkbox']:checked+ label{
+
+        }
+        input[type='checkbox']:checked+label:before {
+            transition: margin-left 0.2s ease-in;
+            margin-left: 1.6em;
+        }
+        .advanced-settings-list input[type='number']{
+            border: 0;
+            width: 3.2em;
+            font-size:1em;
+        }
     </style>
 </head>
 <body>
@@ -280,6 +329,18 @@
             </div>
         </div>
     </div>
+    <div class="advanced-settings-list">
+        <div>
+            <span>搜索建议显示个数(default:4,max:10)</span>
+            <input type="number" value="4" max="10" min="0" v-model.number="num_of_sug">
+        </div>
+        <div>
+            <span>显示搜索历史</span>
+            <input type="checkbox" id="sug_checkbox" v-model="show_search_history">
+            <label class="checkbox" for="sug_checkbox">
+            </label>
+        </div>
+    </div>
     <div class="btn-group">
         <button class="green" onclick="ok()">OK</button>
         <button class="red" onclick="cancel()">cancel</button>
@@ -297,7 +358,7 @@
                 </div>
                 <div class="btn-group">
                     <button class="green" onclick="md_ok()">OK</button>
-                    <button class="red" onclick="md_cancel()">cancel</button>
+                    <button class="red" onclick="md_cancel()">Cancel</button>
                 </div>
             </div>
         </div>
@@ -309,6 +370,7 @@
 <script src="js/jquery-3.2.1.min.js"></script>
 <script src="js/vue.min.js"></script>
 <script>
+    let config = JSON.parse(localStorage.config);
     const vm = new Vue({
         el: "#app",
         data: {
@@ -316,9 +378,32 @@
             s_url:'',
             engine_list: '',
             log:'',
+            num_of_sug:config.num_of_sug,
+            show_search_history:config.show_search_history,
+        },
+        watch:{
+            num_of_sug:function () {
+                if(!isNaN(this.num_of_sug)){
+                    if(this.num_of_sug%1==0)
+                    {
+                        if(this.num_of_sug<0)
+                        {
+                            console.log(this.num_of_sug);
+                            this.num_of_sug='0'
+                        }
+                        else if (this.num_of_sug>10){
+                            this.num_of_sug='10'
+                        }
+                    }else {
+                        this.num_of_sug=parseInt(this.num_of_sug);
+                    }
+                }else {
+                    this.num_of_sug='0'
+                }
+
+            }
         }
     });
-    let config = JSON.parse(localStorage.config);
     const log=(str)=>{
         vm.$data.log=str;
         $('.log').fadeIn(200);
@@ -351,6 +436,8 @@
         log('cancel');
     };
     const ok = () => {
+        config.show_search_history=vm.$data.show_search_history;
+        config.num_of_sug=vm.$data.num_of_sug;
         localStorage.config = JSON.stringify(config);
         self.location.href='./';
     };
@@ -432,6 +519,9 @@
         }
         update_theme_demo()
     };
+    $(document).ready(()=>{
+
+    });
     update_theme_demo();
     /******/
     show_engine_list();
