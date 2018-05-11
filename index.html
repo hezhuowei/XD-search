@@ -171,7 +171,7 @@
 <script src="js/vue.min.js"></script>
 <script>
     "use strict";
-    const version='1.03';
+    const version='1.04';
     const default_config = {
         "default_search_engine": "Baidu",
         "engine_list": [
@@ -187,7 +187,7 @@
         "version":version,
         "num_of_sug":"4",
         "show_search_history":true,
-        "search_history_list":["","","","","","","","","","",],
+        "search_history_list":[],
     };
     if (!localStorage.config) {
         localStorage.config = JSON.stringify(default_config);
@@ -281,7 +281,7 @@
         if(vm.$data.input_text===''){
             let history_items='';
             const max_history=10;
-            for(let i=max_history-1;i>max_history-config.num_of_sug-1;i--){
+            for(let i=max_history-1;i>config.search_history_list.length-config.num_of_sug-1;i--){
                 if(config.search_history_list.hasOwnProperty(i)){
                     const wd=config.search_history_list[i];
                     history_items+=`<li><span  data-text="${wd}" onclick="sug_change(this)">${wd}</span><span class="float-right" data-text="${wd}" onclick="sug_copy(this)">↖</span></li>`
@@ -352,7 +352,7 @@
         $('input').focus(
             () => {
                 $('footer').hide();
-                if(config.show_search_history && vm.$data.input_text==''){
+                if(config.show_search_history && vm.$data.input_text===''){
                     $('.content').removeClass('content-center');
                     show_search_history();
 
@@ -362,12 +362,8 @@
         $('input').blur(
             () => {
                 $('footer').show();
-                if( config.content_center){
-
+                if( config.content_center && vm.$data.v_history_list===''){
                     $('.content').addClass('content-center');
-                }
-                if(config.show_search_history){
-                    vm.$data.v_history_list='';
                 }
             }
         );
