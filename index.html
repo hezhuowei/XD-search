@@ -45,6 +45,9 @@
         footer a:visited {
             color: #555555;
         }
+        footer span{
+            font-size: 0.9em;
+        }
 
         .input-group {
             margin-top: 0.8em;
@@ -156,12 +159,13 @@
                 </div>
             </div>
         </div>
+        <footer>
+            <a href="https://github.com/hezhuowei/I-only-want-to-search">Github</a>
+            <div><span>v{{ v_version }}</span></div>
+        </footer>
     </div>
 </div>
-<footer>
-    <a href="https://github.com/hezhuowei/I-only-want-to-search">Github</a>
-    <div>v{{vsrsion}}</div>
-</footer>
+
 <script id="jsonp"></script>
 <script src="js/jquery-3.2.1.min.js"></script>
 <script src="js/vue.min.js"></script>
@@ -203,7 +207,7 @@
     let vm = new Vue({
         el: '#app',
         data: {
-            version:config.version,
+            v_version:config.version,
             v_sug_list: "",
             v_history_list:"",
             input_text: "",
