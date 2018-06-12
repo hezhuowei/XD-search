@@ -4,6 +4,7 @@ https://bitio.top
 
 适配手机的简单搜索引擎导航，单页webapp，默认注册serviceworker以开启cache，只有第一次需要网络加载本页。
 
+![image](https://github.com/hezhuowei/XD-search/raw/master/Screenshots.gif)
 ## Note 
 
 *出于安全考量，Service workers只能由HTTPS承载，毕竟修改网络请求的能力暴露给中间人攻击会非常危险。*
