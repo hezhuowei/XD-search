@@ -1,390 +1,424 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+  <head>
+    <meta charset="UTF-8" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1.0, maximum-scale=1.0"
+    />
     <title>Search</title>
     <style>
-        body {
-            margin: 0;
-            background-color: #fafafa;
-        }
+      body {
+        margin: 0;
+        background-color: #fafafa;
+      }
 
-        .logo {
-            color: #616161;
-            font-size: 2em;
-        }
+      .logo {
+        color: #616161;
+        font-size: 2em;
+      }
 
-        .logo > ul {
-            padding: 0;
-            margin: 0;
-        }
+      .logo > ul {
+        padding: 0;
+        margin: 0;
+      }
 
-        .logo > ul > li {
-            list-style-type: none;
-        }
+      .logo > ul > li {
+        list-style-type: none;
+      }
 
-        footer {
-            font-size: 0.7em;
-            width: 100%;
-            bottom: 1em;
-            position: fixed;
-            text-align: center;
-            color: #555555;
+      footer {
+        font-size: 0.7em;
+        width: 100%;
+        bottom: 1em;
+        position: fixed;
+        text-align: center;
+        color: #555555;
+      }
 
-        }
+      a {
+        text-decoration: none;
+      }
 
-        a {
-            text-decoration: none;
-        }
+      footer a:link {
+        color: #555555;
+      }
 
-        footer a:link {
-            color: #555555;
-        }
+      footer a:visited {
+        color: #555555;
+      }
+      footer span {
+        font-size: 0.9em;
+      }
 
-        footer a:visited {
-            color: #555555;
-        }
-        footer span{
-            font-size: 0.9em;
-        }
+      .input-group {
+        margin-top: 0.8em;
+        justify-content: center;
+        display: flex;
+      }
 
-        .input-group {
-            margin-top: 0.8em;
-            justify-content: center;
-            display: flex;
-        }
+      .input-group > div {
+        font-size: 0;
+        box-shadow: 0 1px 4px 0 rgba(133, 133, 133, 0.5);
+      }
 
-        .input-group > div {
-            font-size: 0;
-            box-shadow: 0 1px 4px 0 rgba(133, 133, 133, .50);
-        }
+      .input-group > div > input {
+        padding: 0 10px 0 10px;
+        border: 0;
+        height: 3em;
+      }
 
-        .input-group > div > input {
-            padding: 0 10px 0 10px;
-            border: 0;
-            height: 3em;
-        }
+      .input-group > div > input[type="button"] {
+        width: 5em;
+        color: #ffffff;
+        background: cadetblue;
+      }
 
-        .input-group > div > input[type="button"] {
-            width: 5em;
-            color: #ffffff;
-            background: cadetblue;
-        }
+      .input-group > div > input[type="text"] {
+        width: 10em;
+      }
 
-        .input-group > div > input[type="text"] {
-            width: 10em;
-        }
+      .input-group > div > input[class="btn-setting"] {
+        width: 0;
+        padding: 0;
+        background-color: dimgrey;
+      }
 
-        .input-group > div > input[class=btn-setting] {
-            width: 0;
-            padding: 0;
-            background-color: dimgrey;
-        }
+      #group {
+        display: none;
+      }
 
-        #group {
-            display: none;
-        }
+      #group li {
+        margin-top: 0.5em;
+      }
 
-        #group li {
-            margin-top: 0.5em;
-        }
+      .content {
+        width: 100%;
+        display: flex;
+        justify-content: center;
+        text-align: center;
+      }
+      .content-center {
+        position: absolute;
+        left: 50%;
+        top: 40%;
+        transform: translate(-50%, -50%);
+      }
 
+      .sug_list {
+        background-color: #f5f5f5;
+        display: flex;
+        justify-content: center;
+        box-shadow: 1px 1px 2px 0 rgba(133, 133, 133, 0.5);
+      }
 
-        .content {
-            width: 100%;
-            display: flex;
-            justify-content: center;
-            text-align: center;
-        }
-        .content-center{
-            position: absolute;
-            left: 50%;
-            top: 40%;
-            transform: translate(-50%,-50%);
-        }
+      .sug_list > ul {
+        width: 100%;
+        margin: 0;
+        padding: 0;
+      }
 
-        .sug_list {
-            background-color: #f5f5f5;
-            display: flex;
-            justify-content: center;
-            box-shadow: 1px 1px 2px 0 rgba(133, 133, 133, .50);
-        }
-
-        .sug_list > ul {
-            width: 100%;
-            margin: 0;
-            padding: 0;
-        }
-
-        .sug_list > ul > li {
-            display: flex;
-            color: cadetblue;
-            text-align: left;
-            padding: 0.2em 0.2em 0.2em 0.5em;
-            list-style: none;
-        }
-        .sug_list > ul > li >span[onclick="sug_change(this)"]{
-            flex-grow: 1;
-        }
-        .float-right{
-            float: right;
-        }
+      .sug_list > ul > li {
+        display: flex;
+        color: cadetblue;
+        text-align: left;
+        padding: 0.2em 0.2em 0.2em 0.5em;
+        list-style: none;
+      }
+      .sug_list > ul > li > span[onclick="sug_change(this)"] {
+        flex-grow: 1;
+      }
+      .float-right {
+        float: right;
+      }
     </style>
-</head>
-<body>
-<div>
-    <div id="app" class="row">
+  </head>
+  <body>
+    <div>
+      <div id="app" class="row">
         <div class="content">
-            <div>
-                <div class="logo">
-                    <span v-html="logo"></span>
-                    <ul id="group" v-html="group" style="display: none">
-                    </ul>
-                </div>
-                <div class="input-group">
-                    <div>
-                        <input v-model="input_text" type="text" oninput="suggestion()">
-                        <input class="btn-search" value="Search" type="button" onclick="search()">
-                        <input class="btn-setting" value="Settings" type="button" onclick="settings()">
-                    </div>
-                </div>
-                <div class="sug_list">
-                    <ul v-html="v_sug_list">
-                    </ul>
-                </div>
-                <div class="sug_list history-list">
-                    <ul v-html="v_history_list">
-                    </ul>
-                </div>
+          <div>
+            <div class="logo">
+              <span v-html="logo"></span>
+              <ul id="group" v-html="group" style="display: none;"></ul>
             </div>
+            <div class="input-group">
+              <div>
+                <input
+                  v-model="input_text"
+                  type="text"
+                  oninput="suggestion()"
+                />
+                <input
+                  class="btn-search"
+                  value="Search"
+                  type="button"
+                  onclick="search()"
+                />
+                <input
+                  class="btn-setting"
+                  value="Settings"
+                  type="button"
+                  onclick="settings()"
+                />
+              </div>
+            </div>
+            <div class="sug_list">
+              <ul v-html="v_sug_list"></ul>
+            </div>
+            <div class="sug_list history-list">
+              <ul v-html="v_history_list"></ul>
+            </div>
+          </div>
         </div>
         <footer>
-            <a href="https://github.com/hezhuowei/I-only-want-to-search">Github</a>
-            <div><span>v{{ v_version }}</span></div>
+          <a href="https://github.com/hezhuowei/I-only-want-to-search"
+            >Github</a
+          >
+          <div><span>v{{ v_version }}</span></div>
         </footer>
+      </div>
     </div>
-</div>
 
-<script id="jsonp"></script>
-<script src="js/jquery-3.2.1.min.js"></script>
-<script src="js/vue.min.js"></script>
-<script>
-    "use strict";
-    const version='1.04';
-    const default_config = {
-        "default_search_engine": "Baidu",
-        "engine_list": [
-            {"name": "Google", "url": "https://www.google.com/search?q="},
-            {"name": "Baidu", "url": "https://m.baidu.com/s?word="},
-            {"name": "Sougo", "url": "https://m.sogou.com/web/searchList.jsp?keyword="},
-            {"name": "Bing", "url": "https://www.bing.com/search?q="},
-            {"name": "360", "url": "https://m.so.com/s?q="},
-            {"name": "Zhihu", "url": "https://zhihu.sogou.com/zhihuwap?query="}
+    <script id="jsonp"></script>
+    <script src="js/jquery-3.2.1.min.js"></script>
+    <script src="js/vue.min.js"></script>
+    <script>
+      "use strict";
+      const version = "1.04";
+      const default_config = {
+        default_search_engine: "Baidu",
+        engine_list: [
+          { name: "Google", url: "https://www.google.com/search?q=" },
+          { name: "Baidu", url: "https://m.baidu.com/s?word=" },
+          {
+            name: "Sougo",
+            url: "https://m.sogou.com/web/searchList.jsp?keyword=",
+          },
+          { name: "Bing", url: "https://www.bing.com/search?q=" },
+          { name: "360", url: "https://m.so.com/s?q=" },
+          { name: "Zhihu", url: "https://zhihu.sogou.com/zhihuwap?query=" },
         ],
-        "theme":"0",
-        "content_center":true,
-        "version":version,
-        "num_of_sug":"4",
-        "show_search_history":true,
-        "search_history_list":[],
-    };
-    if (!localStorage.config) {
+        theme: "0",
+        content_center: true,
+        version: version,
+        num_of_sug: "4",
+        show_search_history: true,
+        search_history_list: [],
+      };
+      if (!localStorage.config) {
         localStorage.config = JSON.stringify(default_config);
-    }
-    if (!localStorage.default_config) {
+      }
+      if (!localStorage.default_config) {
         localStorage.default_config = JSON.stringify(default_config);
-    }
+      }
 
-    let config = JSON.parse(localStorage.config);
-    if(!config.version || config.version!==version){
+      let config = JSON.parse(localStorage.config);
+      if (!config.version || config.version !== version) {
         localStorage.config = JSON.stringify(default_config);
         localStorage.default_config = JSON.stringify(default_config);
-    }
-    const engine_list = config.engine_list;
+      }
+      const engine_list = config.engine_list;
 
-
-    let vm = new Vue({
-        el: '#app',
+      let vm = new Vue({
+        el: "#app",
         data: {
-            v_version:config.version,
-            v_sug_list: "",
-            v_history_list:"",
-            input_text: "",
-            logo: config.default_search_engine,
-            group: ""
-        }
-    });
+          v_version: config.version,
+          v_sug_list: "",
+          v_history_list: "",
+          input_text: "",
+          logo: config.default_search_engine,
+          group: "",
+        },
+      });
 
-    /*列表切换动画*/
-    const animation_toggle = () => {
-        if (document.getElementById('group').style.display !== 'none') {
-            $('.sug_list').stop();
-            $('input').stop();
-            $(':text').animate({width: '10em', padding: '0 10px 0 10px'}, 200);
-            $('.sug_list').slideToggle(150);
-            $('.btn-search').animate({width: '5em', padding: '0 10px 0 10px'}, 300);
-            $('.btn-setting').animate({width: '0', padding: '0 0 0 0'}, 300);
+      /*列表切换动画*/
+      const animation_toggle = () => {
+        if (document.getElementById("group").style.display !== "none") {
+          $(".sug_list").stop();
+          $("input").stop();
+          $(":text").animate({ width: "10em", padding: "0 10px 0 10px" }, 200);
+          $(".sug_list").slideToggle(150);
+          $(".btn-search").animate(
+            { width: "5em", padding: "0 10px 0 10px" },
+            300
+          );
+          $(".btn-setting").animate({ width: "0", padding: "0 0 0 0" }, 300);
         } else {
-            $('.sug_list').stop();
-            $('input').stop();
-            $(':text').animate({width: '0', padding: '0 0 0 0'}, 200);
-            $('.sug_list').slideToggle(150);
-            $('.btn-search').animate({width: '0', padding: '0 0 0 0'}, 300);
-            $('.btn-setting').animate({width: '10em', padding: '0 10px 0 10px'}, 300);
+          $(".sug_list").stop();
+          $("input").stop();
+          $(":text").animate({ width: "0", padding: "0 0 0 0" }, 200);
+          $(".sug_list").slideToggle(150);
+          $(".btn-search").animate({ width: "0", padding: "0 0 0 0" }, 300);
+          $(".btn-setting").animate(
+            { width: "10em", padding: "0 10px 0 10px" },
+            300
+          );
         }
-        $('#group').stop();
-        $('#group').slideToggle(150);
-        $('footer').fadeToggle(150);
-    };
+        $("#group").stop();
+        $("#group").slideToggle(150);
+        $("footer").fadeToggle(150);
+      };
 
-    const set_default_engine = (str) => {
+      const set_default_engine = (str) => {
         config.default_search_engine = str;
         localStorage.config = JSON.stringify(config);
         update_group(str);
         vm.$data.logo = str;
         animation_toggle();
-    };
-    const update_group = (default_engine) => {
-        let item = '';
+      };
+      const update_group = (default_engine) => {
+        let item = "";
         for (let i in engine_list) {
-            if (engine_list.hasOwnProperty(i) && engine_list[i].name !== default_engine) {
-
-                item += `<li onclick="set_default_engine('${engine_list[i].name}')">${engine_list[i].name}</li>`
-            }
+          if (
+            engine_list.hasOwnProperty(i) &&
+            engine_list[i].name !== default_engine
+          ) {
+            item += `<li onclick="set_default_engine('${engine_list[i].name}')">${engine_list[i].name}</li>`;
+          }
         }
         vm.$data.group = item;
-    };
-    const search = () => {
+      };
+      const search = () => {
         const url = engine_list.find((n) => {
-            return n.name === config.default_search_engine
+          return n.name === config.default_search_engine;
         }).url;
 
-
-        const add_search_history=()=>{
-            config.search_history_list.push(vm.$data.input_text);
-            const max_history='10';
-            while(config.search_history_list.length>max_history){
-                config.search_history_list.shift();
-            }
-            localStorage.config=JSON.stringify(config);
+        const add_search_history = () => {
+          config.search_history_list.push(vm.$data.input_text);
+          const max_history = "10";
+          while (config.search_history_list.length > max_history) {
+            config.search_history_list.shift();
+          }
+          localStorage.config = JSON.stringify(config);
         };
         add_search_history();
         self.location.href = url + vm.$data.input_text;
-    };
-    const settings = () => {
-        self.location.href = `./settings.html`
-    };
+      };
+      const settings = () => {
+        self.location.href = `./settings.html`;
+      };
 
-    /*显示搜索历史记录*/
-    const show_search_history= ()=>{
-        if(vm.$data.input_text===''){
-            let history_items='';
-            const max_history=10;
-            for(let i=max_history-1;i>config.search_history_list.length-config.num_of_sug-1;i--){
-                if(config.search_history_list.hasOwnProperty(i)){
-                    const wd=config.search_history_list[i];
-                    history_items+=`<li><span  data-text="${wd}" onclick="sug_change(this)">${wd}</span><span class="float-right" data-text="${wd}" onclick="sug_copy(this)">↖</span></li>`
-                }
+      /*显示搜索历史记录*/
+      const show_search_history = () => {
+        if (vm.$data.input_text === "") {
+          let history_items = "";
+          const max_history = 10;
+          for (
+            let i = max_history - 1;
+            i > config.search_history_list.length - config.num_of_sug - 1;
+            i--
+          ) {
+            if (config.search_history_list.hasOwnProperty(i)) {
+              const wd = config.search_history_list[i];
+              history_items += `<li><span  data-text="${wd}" onclick="sug_change(this)">${wd}</span><span class="float-right" data-text="${wd}" onclick="sug_copy(this)">↖</span></li>`;
             }
-            vm.$data.v_history_list =history_items;
-        }else {
-            vm.$data.v_history_list =''
+          }
+          vm.$data.v_history_list = history_items;
+        } else {
+          vm.$data.v_history_list = "";
         }
-    };
-    /*jsonp跨域调用百度suggestion*/
-    const suggestion = () => {
+      };
+      /*jsonp跨域调用百度suggestion*/
+      const suggestion = () => {
         setTimeout(() => {
-            const old_jsonp = document.getElementById("jsonp");
-            document.body.removeChild(old_jsonp);
-            const wd = vm.$data.input_text;
-            const new_jsonp = document.createElement('script');
-            new_jsonp.id = 'jsonp';
-            new_jsonp.src = `https://sp0.baidu.com/5a1Fazu8AA54nxGko9WTAnF6hhy/su?wd=${wd}`;
-            document.body.appendChild(new_jsonp)
-        }, 100)
-    };
-    /*百度suggestion回调*/
-    window.baidu = {
-        "sug": (req) => {             /*返回json*/
+          const old_jsonp = document.getElementById("jsonp");
+          document.body.removeChild(old_jsonp);
+          const wd = vm.$data.input_text;
+          const new_jsonp = document.createElement("script");
+          new_jsonp.id = "jsonp";
+          new_jsonp.src = `https://sp0.baidu.com/5a1Fazu8AA54nxGko9WTAnF6hhy/su?wd=${wd}`;
+          document.body.appendChild(new_jsonp);
+        }, 100);
+      };
+      /*百度suggestion回调*/
+      window.baidu = {
+        sug: (req) => {
+          /*返回json*/
 
-            const arr = req.s;
-            let sug_items = '';
-            for (let i =0;i<config.num_of_sug;i++) {
-                if(arr.hasOwnProperty(i)){
-                    const wd = arr[i];
-                    sug_items += `<li><span  data-text="${wd}" onclick="sug_change(this)">${wd}</span><span class="float-right" data-text="${wd}" onclick="sug_copy(this)">↖</span></li>`;
-                }
+          const arr = req.s;
+          let sug_items = "";
+          for (let i = 0; i < config.num_of_sug; i++) {
+            if (arr.hasOwnProperty(i)) {
+              const wd = arr[i];
+              sug_items += `<li><span  data-text="${wd}" onclick="sug_change(this)">${wd}</span><span class="float-right" data-text="${wd}" onclick="sug_copy(this)">↖</span></li>`;
             }
-            vm.$data.v_sug_list = sug_items;
-            if(config.content_center ){
-                if( req.s.length!==0 && config.num_of_sug!==0){
-                    $('.content').removeClass('content-center');
-
-                }else {
-                    $('.content').addClass('content-center');
-
-                }
+          }
+          vm.$data.v_sug_list = sug_items;
+          if (config.content_center) {
+            if (req.s.length !== 0 && config.num_of_sug !== 0) {
+              $(".content").removeClass("content-center");
+            } else {
+              $(".content").addClass("content-center");
             }
-            show_search_history();
-        }
-    };
-    /**/
-    const sug_copy=(e)=>{
+          }
+          show_search_history();
+        },
+      };
+      /**/
+      const sug_copy = (e) => {
         vm.$data.input_text = e.dataset.text;
-    };
-    const sug_change = (e) => {
+      };
+      const sug_change = (e) => {
         vm.$data.input_text = e.dataset.text;
         search();
-    };
-    /*service worker*/
-    if ('serviceWorker' in navigator) {
-        navigator.serviceWorker.register('/sw.js', {scope: '/'}
-        ).then(
-            (reg) => {
-                console.log(`service worker scope is ${reg.scope}`);
-            }
-        ).catch((err) => {
-            console.log(`service worker registration failed with${err}`)
+      };
+      /*service worker*/
+      if ("serviceWorker" in navigator) {
+        navigator.serviceWorker
+          .register("/sw.js", { scope: "/" })
+          .then((reg) => {
+            console.log(`service worker scope is ${reg.scope}`);
+          })
+          .catch((err) => {
+            console.log(`service worker registration failed with${err}`);
+          });
+      }
+      const hide_footer_when_keyb_show = () => {
+        $("input").focus(() => {
+          $("footer").hide();
+          if (config.show_search_history && vm.$data.input_text === "") {
+            $(".content").removeClass("content-center");
+            show_search_history();
+          }
         });
-    }
-    const hide_footer_when_keyb_show = () => {
-        $('input').focus(
-            () => {
-                $('footer').hide();
-                if(config.show_search_history && vm.$data.input_text===''){
-                    $('.content').removeClass('content-center');
-                    show_search_history();
+        $("input").blur(() => {
+          $("footer").show();
+          if (config.content_center && vm.$data.v_history_list === "") {
+            $(".content").addClass("content-center");
+          }
+        });
+      };
 
-                }
-            }
-        );
-        $('input').blur(
-            () => {
-                $('footer').show();
-                if( config.content_center && vm.$data.v_history_list===''){
-                    $('.content').addClass('content-center');
-                }
-            }
-        );
-    };
-
-    $(document).ready(function () {
-        if(config.content_center){
-            $('.content').addClass('content-center');
+      $(document).ready(function () {
+        if (config.content_center) {
+          $(".content").addClass("content-center");
         }
         update_group(config.default_search_engine);
         hide_footer_when_keyb_show();
 
-        $('.logo').find('span').click(() => {
+        $(".logo")
+          .find("span")
+          .click(() => {
             animation_toggle();
+          });
+        $("input").keyup((e) => {
+          if (e.keyCode === 13) {
+            search();
+          }
         });
-        $('input').keyup((e) => {
-            if (e.keyCode === 13) {
-                search();
-            }
-        })
-    });
-</script>
-</body>
+      });
+    </script>
+    <script>
+      var _mtac = {};
+      (function () {
+        var mta = document.createElement("script");
+        mta.src = "//pingjs.qq.com/h5/stats.js?v2.0.4";
+        mta.setAttribute("name", "MTAH5");
+        mta.setAttribute("sid", "500721835");
+        var s = document.getElementsByTagName("script")[0];
+        s.parentNode.insertBefore(mta, s);
+      })();
+    </script>
+  </body>
 </html>
